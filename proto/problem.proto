@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "./gen;gen"; 
+package problem;
+
+message Problem {
+    string id = 1;           
+    string name = 2;         
+    string description = 3;  
+    string input = 4;        
+    string output = 5;       
+}
+
+message CreateProblemRequest {
+    string name = 1;
+    string description = 2;
+    string input = 3;
+    string output = 4;
+}
+
+message GetProblemByIdRequest {
+    uint32 id = 1;
+}
+
+message GetAllProblemsRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+}
+
+message CreateProblemResponse {
+    string message = 1;
+}
+
+message GetProblemByIdResponse {
+    Problem problems = 1;
+}
+
+message GetAllProblemsResponse {
+    repeated Problem problems = 1;
+}
+
+
+service ProblemService {
+    rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
+
+    rpc GetProblemById(GetProblemByIdRequest) returns (GetProblemByIdResponse);
+
+    rpc GetAllProblems(GetAllProblemsRequest) returns (GetAllProblemsResponse);
+}
