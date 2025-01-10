@@ -1,5 +1,6 @@
 module github.com/MyImplementationLeetcode/proto_files
 
+
 go 1.23.4
 
 require (
