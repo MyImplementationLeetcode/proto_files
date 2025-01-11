@@ -18,6 +18,12 @@ message CreateProblemRequest {
     string output = 4;
 }
 
+message SolutionCheckRequest {
+    string lang = 1;
+    string code = 2;
+    uint32 problemId = 3;
+}
+
 message GetProblemByIdRequest {
     uint32 id = 1;
 }
@@ -39,6 +45,10 @@ message GetAllProblemsResponse {
     repeated Problem problems = 1;
 }
 
+message SolutionCheckResponse {
+    string message = 1;
+}
+
 
 service ProblemService {
     rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
@@ -46,4 +56,6 @@ service ProblemService {
     rpc GetProblemById(GetProblemByIdRequest) returns (GetProblemByIdResponse);
 
     rpc GetAllProblems(GetAllProblemsRequest) returns (GetAllProblemsResponse);
+
+    rpc SolutionChecker(SolutionCheckRequest) returns (SolutionCheckResponse);
 }

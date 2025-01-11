@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProblemService_CreateProblem_FullMethodName  = "/problem.ProblemService/CreateProblem"
-	ProblemService_GetProblemById_FullMethodName = "/problem.ProblemService/GetProblemById"
-	ProblemService_GetAllProblems_FullMethodName = "/problem.ProblemService/GetAllProblems"
+	ProblemService_CreateProblem_FullMethodName   = "/problem.ProblemService/CreateProblem"
+	ProblemService_GetProblemById_FullMethodName  = "/problem.ProblemService/GetProblemById"
+	ProblemService_GetAllProblems_FullMethodName  = "/problem.ProblemService/GetAllProblems"
+	ProblemService_SolutionChecker_FullMethodName = "/problem.ProblemService/SolutionChecker"
 )
 
 // ProblemServiceClient is the client API for ProblemService service.
@@ -31,6 +32,7 @@ type ProblemServiceClient interface {
 	CreateProblem(ctx context.Context, in *CreateProblemRequest, opts ...grpc.CallOption) (*CreateProblemResponse, error)
 	GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*GetProblemByIdResponse, error)
 	GetAllProblems(ctx context.Context, in *GetAllProblemsRequest, opts ...grpc.CallOption) (*GetAllProblemsResponse, error)
+	SolutionChecker(ctx context.Context, in *SolutionCheckRequest, opts ...grpc.CallOption) (*SolutionCheckResponse, error)
 }
 
 type problemServiceClient struct {
@@ -71,6 +73,16 @@ func (c *problemServiceClient) GetAllProblems(ctx context.Context, in *GetAllPro
 	return out, nil
 }
 
+func (c *problemServiceClient) SolutionChecker(ctx context.Context, in *SolutionCheckRequest, opts ...grpc.CallOption) (*SolutionCheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SolutionCheckResponse)
+	err := c.cc.Invoke(ctx, ProblemService_SolutionChecker_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProblemServiceServer is the server API for ProblemService service.
 // All implementations must embed UnimplementedProblemServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type ProblemServiceServer interface {
 	CreateProblem(context.Context, *CreateProblemRequest) (*CreateProblemResponse, error)
 	GetProblemById(context.Context, *GetProblemByIdRequest) (*GetProblemByIdResponse, error)
 	GetAllProblems(context.Context, *GetAllProblemsRequest) (*GetAllProblemsResponse, error)
+	SolutionChecker(context.Context, *SolutionCheckRequest) (*SolutionCheckResponse, error)
 	mustEmbedUnimplementedProblemServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedProblemServiceServer) GetProblemById(context.Context, *GetPro
 }
 func (UnimplementedProblemServiceServer) GetAllProblems(context.Context, *GetAllProblemsRequest) (*GetAllProblemsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllProblems not implemented")
+}
+func (UnimplementedProblemServiceServer) SolutionChecker(context.Context, *SolutionCheckRequest) (*SolutionCheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SolutionChecker not implemented")
 }
 func (UnimplementedProblemServiceServer) mustEmbedUnimplementedProblemServiceServer() {}
 func (UnimplementedProblemServiceServer) testEmbeddedByValue()                        {}
@@ -172,6 +188,24 @@ func _ProblemService_GetAllProblems_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProblemService_SolutionChecker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SolutionCheckRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProblemServiceServer).SolutionChecker(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProblemService_SolutionChecker_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProblemServiceServer).SolutionChecker(ctx, req.(*SolutionCheckRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProblemService_ServiceDesc is the grpc.ServiceDesc for ProblemService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var ProblemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllProblems",
 			Handler:    _ProblemService_GetAllProblems_Handler,
+		},
+		{
+			MethodName: "SolutionChecker",
+			Handler:    _ProblemService_SolutionChecker_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
