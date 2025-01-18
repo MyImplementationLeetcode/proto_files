@@ -3,6 +3,13 @@ syntax = "proto3";
 option go_package = "./gen;gen"; 
 package problem;
 
+message User {
+    string id = 1;
+    string name = 2;
+    string login = 3;
+    string password = 4;
+}
+
 message Problem {
     string id = 1;           
     string name = 2;         
